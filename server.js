@@ -1,10 +1,15 @@
 const express = require('express');
+const favicon = require('serve-favicon');
+const path = require('path');
 const hbs = require('hbs');
 const fs = require('fs');
 
 const app = express();
 
-hbs.registerPartials(__dirname + '/views/partials');
+// User agents request favicon.ico frequently and indiscriminately, so use this middleware before the logger middleware.
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 app.set('view engine', 'hbs');
 
 app.use((req, res, next) => {
@@ -56,6 +61,8 @@ app.get('/bad', (req, res) => {
     })
 });
 
-app.listen(3000, () => {
-    console.log("server is running on port 3000");
+const PORT = process.env.port || 8080;
+// const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`App is listening on port ${PORT}`);
 });
